@@ -1,0 +1,35 @@
+#!/usr/bin/env ruby
+
+path = File.expand_path(File.join(File.dirname(__FILE__), 'lib'))
+$LOAD_PATH << path
+
+require 'rubygems'
+require 'bundler/setup'
+Bundler.require :default
+require 'docker'
+Docker.url = "http://localhost:4243"
+require 'optparse'
+
+options = {}
+options[:registry] = ENV["REGISTRY"]
+options[:prefix] = ENV["PREFIX"]
+
+OptionParser.new do |opts|
+  opts.banner = "Usage: docker_clean [options]"
+
+  opts.on("-p", "--prefix", "Prefix of images your want to clean") do |r|
+    options[:prefix] = r
+  end
+  opts.on("-r", "--registry", "Registry") do |r|
+    options[:registry] = r
+  end
+end.parse!
+
+if options[:registry].nil?
+  puts "--registry|-r option should be filled"
+  exit -1
+end
+
+require 'images_cleaner'
+
+ImagesCleaner.run options[:registry], options[:prefix]
