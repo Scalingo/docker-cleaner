@@ -1,14 +1,15 @@
-class ImagesCleaner
-  def self.run registry
-    ImagesCleaner.new(registry).run
-  end
-
+module DockerCleaner
+class Images
   def initialize registry, prefix
     @prefix = prefix || ""
     @registry = registry
   end
 
   def run
+    clean_old_images
+  end
+
+  def clean_old_images
     apps = images_with_latest
     apps.each do |app, images|
       if app =~ /.*-tmax$/
@@ -16,12 +17,12 @@ class ImagesCleaner
       end
       images.each do |i|
         unless i.info["Created"] == apps["#{app}-tmax"]
-          puts "Remove #{i.info['RepoTags'][0]} => #{i.id[0..10]}"
+          puts "Remove #{i.info['RepoTags'][0]} => #{i.id[0...10]}"
           begin
             i.remove
           rescue Docker::Error::NotFoundError
-	  rescue Excon::Errors::Conflict
-            puts "Conflict when removing #{i.info['RepoTags'][0]} (#{i.id[0..10]}"
+          rescue Excon::Errors::Conflict
+            puts "Conflict when removing #{i.info['RepoTags'][0]} (#{i.id[0...10]}"
           end
         end
       end
@@ -52,4 +53,5 @@ class ImagesCleaner
     end
     apps
   end
+end
 end

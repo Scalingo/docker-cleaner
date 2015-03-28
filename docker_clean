@@ -30,6 +30,6 @@ if options[:registry].nil?
   exit -1
 end
 
-require 'images_cleaner'
+require 'docker_cleaner'
 
-ImagesCleaner.run options[:registry], options[:prefix]
+DockerCleaner.run options[:registry], options[:prefix]
