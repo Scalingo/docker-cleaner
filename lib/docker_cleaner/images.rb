@@ -7,6 +7,22 @@ class Images
 
   def run
     clean_old_images
+    clean_unnamed_images
+  end
+
+  def clean_unnamed_images
+    Docker::Image.all.select do |image|
+      image.info["RepoTags"][0] == "<none>:<none>"
+    end.each do |image|
+      puts "Remove unnamed image #{image.id[0...10]}"
+      begin
+        image.remove
+      rescue Docker::Error::NotFoundError
+      rescue Excon::Errors::Conflict => e
+        puts "Conflict when removing #{image.id[0...10]}"
+        puts " !     #{e.response.body}"
+      end
+    end
   end
 
   def clean_old_images
