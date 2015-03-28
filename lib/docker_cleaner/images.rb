@@ -21,8 +21,9 @@ class Images
           begin
             i.remove
           rescue Docker::Error::NotFoundError
-          rescue Excon::Errors::Conflict
+          rescue Excon::Errors::Conflict => e
             puts "Conflict when removing #{i.info['RepoTags'][0]} - ID: #{i.id[0...10]}"
+            puts " !     #{e.response.body}"
           end
         end
       end
