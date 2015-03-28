@@ -1,10 +1,5 @@
 module DockerCleaner
-class Images
-  def initialize registry, prefix
-    @prefix = prefix || ""
-    @registry = registry
-  end
-
+class Containers
   def run
     # Remove stopped container which stopped with code '0'
     Docker::Container.all(all: true).select{ |container| 

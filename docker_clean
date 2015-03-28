@@ -17,10 +17,10 @@ options[:prefix] = ENV["PREFIX"]
 OptionParser.new do |opts|
   opts.banner = "Usage: docker_clean [options]"
 
-  opts.on("-p", "--prefix", "Prefix of images your want to clean") do |r|
+  opts.on("-pPREFIX", "--prefix=PREFIX", "Prefix of images your want to clean") do |r|
     options[:prefix] = r
   end
-  opts.on("-r", "--registry", "Registry") do |r|
+  opts.on("-rREGISTRY", "--registry=REGISTRY", "Registry") do |r|
     options[:registry] = r
   end
 end.parse!

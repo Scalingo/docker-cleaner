@@ -3,7 +3,7 @@ require 'docker_cleaner/images'
 
 module DockerCleaner
   def self.run(registry, prefix)
-    DockerCleaner::Containers.new(registry, prefix).run
+    DockerCleaner::Containers.new.run
     DockerCleaner::Images.new(registry, prefix).run
   end
 end
