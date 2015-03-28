@@ -22,7 +22,7 @@ class Images
             i.remove
           rescue Docker::Error::NotFoundError
           rescue Excon::Errors::Conflict
-            puts "Conflict when removing #{i.info['RepoTags'][0]} (#{i.id[0...10]}"
+            puts "Conflict when removing #{i.info['RepoTags'][0]} - ID: #{i.id[0...10]}"
           end
         end
       end
