@@ -70,5 +70,22 @@ class Images
     end
     apps
   end
+
+  def clean_unused_images
+    used_images = Docker::Container.all.map{|c| c.info["Image"]}.select{|i| i =~ /^#{@registry}\/#{@prefix}/ }.uniq
+    images ||= Docker::Image.all.select{|i| i.info["RepoTags"][0] =~ /^#{@registry}\/#{@prefix}/ }
+    unused_images = images - used_images
+
+    unused_images.each do |i|
+      puts "Remove unused image #{i.info['RepoTags'][0]} => #{i.id[0...10]}"
+      begin
+        i.remove
+      rescue Docker::Error::NotFoundError
+      rescue Excon::Errors::Conflict => e
+        puts "Conflict when removing #{i.info['RepoTags'][0]} - ID: #{i.id[0...10]}"
+        puts " !     #{e.response.body}"
+      end
+    end
+  end
 end
 end
