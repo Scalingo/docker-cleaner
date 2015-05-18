@@ -1,4 +1,3 @@
 source 'https://rubygems.org'
 
-gem 'docker-api'
-gem 'pry'
+gem 'docker-cleaner', path: "."

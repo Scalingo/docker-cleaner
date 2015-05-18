@@ -1,0 +1,3 @@
+module DockerCleaner
+  VERSION = "0.1"
+end
