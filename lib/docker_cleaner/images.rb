@@ -1,8 +1,9 @@
 module DockerCleaner
 class Images
-  def initialize registry, prefix
+  def initialize registry, prefix, logger
     @prefix = prefix || ""
     @registry = registry
+    @logger = logger
   end
 
   def run
@@ -14,13 +15,13 @@ class Images
     Docker::Image.all.select do |image|
       image.info["RepoTags"][0] == "<none>:<none>"
     end.each do |image|
-      puts "Remove unnamed image #{image.id[0...10]}"
+      @logger.info "Remove unnamed image #{image.id[0...10]}"
       begin
         image.remove
       rescue Docker::Error::NotFoundError
       rescue Excon::Errors::Conflict => e
-        puts "Conflict when removing #{image.id[0...10]}"
-        puts " !     #{e.response.body}"
+        @logger.warn "Conflict when removing #{image.id[0...10]}"
+        @logger.warn " !     #{e.response.body}"
       end
     end
   end
@@ -33,13 +34,13 @@ class Images
       end
       images.each do |i|
         unless i.info["Created"] == apps["#{app}-tmax"]
-          puts "Remove #{i.info['RepoTags'][0]} => #{i.id[0...10]}"
+          @logger.info "Remove #{i.info['RepoTags'][0]} => #{i.id[0...10]}"
           begin
             i.remove
           rescue Docker::Error::NotFoundError
           rescue Excon::Errors::Conflict => e
-            puts "Conflict when removing #{i.info['RepoTags'][0]} - ID: #{i.id[0...10]}"
-            puts " !     #{e.response.body}"
+            @logger.warn "Conflict when removing #{i.info['RepoTags'][0]} - ID: #{i.id[0...10]}"
+            @logger.warn " !     #{e.response.body}"
           end
         end
       end
@@ -77,13 +78,13 @@ class Images
     unused_images = images - used_images
 
     unused_images.each do |i|
-      puts "Remove unused image #{i.info['RepoTags'][0]} => #{i.id[0...10]}"
+      @logger.info "Remove unused image #{i.info['RepoTags'][0]} => #{i.id[0...10]}"
       begin
         i.remove
       rescue Docker::Error::NotFoundError
       rescue Excon::Errors::Conflict => e
-        puts "Conflict when removing #{i.info['RepoTags'][0]} - ID: #{i.id[0...10]}"
-        puts " !     #{e.response.body}"
+        @logger.warn "Conflict when removing #{i.info['RepoTags'][0]} - ID: #{i.id[0...10]}"
+        @logger.warn " !     #{e.response.body}"
       end
     end
   end

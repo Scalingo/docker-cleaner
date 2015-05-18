@@ -1,9 +1,13 @@
 module DockerCleaner
 class Containers
+  def intialize(logger)
+    @logger = logger
+  end
+
   def remove(container)
-    $stdout.write "Remove #{container.id[0...10]} - #{container.info["Image"]} - #{container.info["Names"][0]}"
+    @logger.info "Remove #{container.id[0...10]} - #{container.info["Image"]} - #{container.info["Names"][0]}"
     container.remove
-    $stdout.write "... OK\n"
+    @logger.info "Remove #{container.id[0...10]} - #{container.info["Image"]} - #{container.info["Names"][0]}... OK"
   end
 
   def run

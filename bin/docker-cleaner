@@ -9,10 +9,12 @@ Bundler.require :default
 require 'docker'
 Docker.url = "http://localhost:4243"
 require 'optparse'
+require 'logger'
 
 options = {}
 options[:registry] = ENV["REGISTRY"]
 options[:prefix] = ENV["PREFIX"]
+options[:log] = ENV["LOG_FILE"]
 
 OptionParser.new do |opts|
   opts.banner = "Usage: docker_clean [options]"
@@ -23,13 +25,18 @@ OptionParser.new do |opts|
   opts.on("-rREGISTRY", "--registry=REGISTRY", "Registry") do |r|
     options[:registry] = r
   end
+  opts.on("-lLOG", "--log=LOG", "Log file") do |r|
+    options[:log] = r
+  end
 end.parse!
 
+logger = Logger.new options[:log] || $stdout
+
 if options[:registry].nil?
-  puts "--registry|-r option should be filled"
+  $stderr.puts "--registry|-r option should be filled"
   exit -1
 end
 
 require 'docker_cleaner'
 
-DockerCleaner.run options[:registry], options[:prefix]
+DockerCleaner.run options[:registry], options[:prefix], logger
