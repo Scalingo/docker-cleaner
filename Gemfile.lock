@@ -7,16 +7,15 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    archive-tar-minitar (0.5.2)
-    docker-api (1.17.0)
-      archive-tar-minitar
+    docker-api (1.21.4)
       excon (>= 0.38.0)
       json
-    excon (0.44.4)
+    excon (0.45.3)
     json (1.8.2)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  docker-api (~> 1.18)
   docker-cleaner!
