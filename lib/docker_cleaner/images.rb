@@ -19,9 +19,9 @@ class Images
       begin
         image.remove
       rescue Docker::Error::NotFoundError
-      rescue Excon::Errors::Conflict => e
+      rescue Docker::Error::ConflictError => e
         @logger.warn "Conflict when removing #{image.id[0...10]}"
-        @logger.warn " !     #{e.response.body}"
+        @logger.warn " !     #{e.message}"
       end
     end
   end
@@ -38,9 +38,9 @@ class Images
           begin
             i.remove
           rescue Docker::Error::NotFoundError
-          rescue Excon::Errors::Conflict => e
+          rescue Docker::Error::ConflictError => e
             @logger.warn "Conflict when removing #{i.info['RepoTags'][0]} - ID: #{i.id[0...10]}"
-            @logger.warn " !     #{e.response.body}"
+            @logger.warn " !     #{e.message}"
           end
         end
       end
@@ -82,9 +82,9 @@ class Images
       begin
         i.remove
       rescue Docker::Error::NotFoundError
-      rescue Excon::Errors::Conflict => e
+      rescue Docker::Error::ConflictError => e
         @logger.warn "Conflict when removing #{i.info['RepoTags'][0]} - ID: #{i.id[0...10]}"
-        @logger.warn " !     #{e.response.body}"
+        @logger.warn " !     #{e.message}"
       end
     end
   end
