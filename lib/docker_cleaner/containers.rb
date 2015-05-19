@@ -1,6 +1,6 @@
 module DockerCleaner
 class Containers
-  def intialize(logger)
+  def initialize(logger)
     @logger = logger
   end
 
