@@ -9,6 +9,7 @@ class Images
   def run
     clean_old_images
     clean_unnamed_images
+    clean_unused_images
   end
 
   def clean_unnamed_images
@@ -73,17 +74,21 @@ class Images
   end
 
   def clean_unused_images
+    one_month_ago = Time.now.to_i - 31 * 24 * 3600
     used_images = Docker::Container.all.map{|c| c.info["Image"]}.select{|i| i =~ /^#{@registry}\/#{@prefix}/ }.uniq
-    images ||= Docker::Image.all.select{|i| i.info["RepoTags"][0] =~ /^#{@registry}\/#{@prefix}/ }
-    unused_images = images - used_images
+    # Images older than 2 months
+    images = Docker::Image.all.select{|i| i.info["RepoTags"][0] =~ /^#{@registry}\/#{@prefix}/ && i.info["Created"] < one_month_ago }
+    image_repos = images.map{|i| i.info["RepoTags"][0]}
+    unused_images = image_repos - used_images
 
     unused_images.each do |i|
-      @logger.info "Remove unused image #{i.info['RepoTags'][0]} => #{i.id[0...10]}"
+      image = images.select{|docker_image| docker_image.info["RepoTags"][0] == i}[0]
+      @logger.info "Remove unused image #{image.info['RepoTags'][0]} => #{image.id[0...10]}"
       begin
-        i.remove
+        image.remove
       rescue Docker::Error::NotFoundError
       rescue Docker::Error::ConflictError => e
-        @logger.warn "Conflict when removing #{i.info['RepoTags'][0]} - ID: #{i.id[0...10]}"
+        @logger.warn "Conflict when removing #{image.info['RepoTags'][0]} - ID: #{image.id[0...10]}"
         @logger.warn " !     #{e.message}"
       end
     end
