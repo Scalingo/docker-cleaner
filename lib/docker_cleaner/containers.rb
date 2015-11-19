@@ -12,9 +12,12 @@ class Containers
 
   def run
     # Remove stopped container which stopped with code '0'
-    one_week_ago = Time.now.to_i - 7 * 24 * 3600
+    two_hours_ago = Time.now.to_i - 2 * 3600
     Docker::Container.all(all: true).select{ |container| 
-      container.info["Status"].include?("Exited (0)") || container.info["Status"].include?("Exited (") && container.info["Created"].to_i < one_week_ago
+      status = container.info["Status"]
+      status == "Created" ||
+        status.include?("Exited (0)") ||
+        status.include?("Exited (") && container.info["Created"].to_i < two_hours_ago
     }.each do |container|
       remove(container)
     end
