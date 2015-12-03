@@ -8,6 +8,7 @@ require 'bundler/setup'
 Bundler.require :default
 require 'docker'
 Docker.url = "http://localhost:4243"
+Docker.options = { read_timeout: 300, write_timeout: 300 }
 require 'optparse'
 require 'logger'
 
