@@ -74,10 +74,10 @@ class Images
   end
 
   def clean_unused_images
-    one_month_ago = Time.now.to_i - 31 * 24 * 3600
+    three_weeks_ago = Time.now.to_i - 21 * 24 * 3600
     used_images = Docker::Container.all.map{|c| c.info["Image"]}.select{|i| i =~ /^#{@registry}\/#{@prefix}/ }.uniq
     # Images older than 2 months
-    images = Docker::Image.all.select{|i| i.info["RepoTags"][0] =~ /^#{@registry}\/#{@prefix}/ && i.info["Created"] < one_month_ago }
+    images = Docker::Image.all.select{|i| i.info["RepoTags"][0] =~ /^#{@registry}\/#{@prefix}/ && i.info["Created"] < three_weeks_ago }
     image_repos = images.map{|i| i.info["RepoTags"][0]}
     unused_images = image_repos - used_images
 
