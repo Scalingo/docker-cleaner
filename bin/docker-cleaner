@@ -7,8 +7,7 @@ require 'rubygems'
 require 'bundler/setup'
 Bundler.require :default
 require 'docker'
-Docker.url = "http://localhost:4243"
-Docker.options = { read_timeout: 300, write_timeout: 300 }
+
 require 'optparse'
 require 'logger'
 
@@ -16,6 +15,7 @@ options = {}
 options[:registry] = ENV["REGISTRY"]
 options[:prefix] = ENV["PREFIX"]
 options[:log] = ENV["LOG_FILE"]
+options[:docker] = ENV["DOCKER_HOST"]
 
 OptionParser.new do |opts|
   opts.banner = "Usage: docker_clean [options]"
@@ -29,6 +29,9 @@ OptionParser.new do |opts|
   opts.on("-lLOG", "--log=LOG", "Log file") do |r|
     options[:log] = r
   end
+  opts.on("-dDOCKER", "--docker=DOCKER", "Docker endpoint") do |r|
+    options[:docker] = r
+  end
 end.parse!
 
 logger = Logger.new options[:log] || $stdout
@@ -37,6 +40,10 @@ if options[:registry].nil?
   $stderr.puts "--registry|-r option should be filled"
   exit -1
 end
+
+
+Docker.url = options[:docker] || "http://localhost:4243"
+Docker.options = { read_timeout: 300, write_timeout: 300 }
 
 require 'docker_cleaner'
 
