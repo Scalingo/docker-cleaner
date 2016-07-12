@@ -51,4 +51,4 @@ Docker.options = { read_timeout: 300, write_timeout: 300 }
 
 require 'docker_cleaner'
 
-DockerCleaner.run options[:registry], options[:prefix], options[:delete_delay], logger
+DockerCleaner.run options[:registry], options[:prefix], options[:delete_delay].to_i, logger
