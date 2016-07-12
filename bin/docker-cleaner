@@ -16,10 +16,14 @@ options[:registry] = ENV["REGISTRY"]
 options[:prefix] = ENV["PREFIX"]
 options[:log] = ENV["LOG_FILE"]
 options[:docker] = ENV["DOCKER_HOST"]
+options[:delete_delay] = ENV["DELETE_DELAY"]
 
 OptionParser.new do |opts|
   opts.banner = "Usage: docker_clean [options]"
 
+  opts.on("--delete-delay=DELAY", "Delay in seconds between container/image deletion") do |r|
+    options[:delete_delay] = r
+  end
   opts.on("-pPREFIX", "--prefix=PREFIX", "Prefix of images your want to clean") do |r|
     options[:prefix] = r
   end
@@ -47,4 +51,4 @@ Docker.options = { read_timeout: 300, write_timeout: 300 }
 
 require 'docker_cleaner'
 
-DockerCleaner.run options[:registry], options[:prefix], logger
+DockerCleaner.run options[:registry], options[:prefix], options[:delete_delay], logger

@@ -1,9 +1,10 @@
 module DockerCleaner
 class Images
-  def initialize registry, prefix, logger
+  def initialize registry, prefix, logger, opts = {}
     @prefix = prefix || ""
     @registry = registry
     @logger = logger
+    @delay = opts.fetch(:delay, 0)
   end
 
   def run
@@ -19,6 +20,7 @@ class Images
       @logger.info "Remove unnamed image #{image.id[0...10]}"
       begin
         image.remove
+        sleep(@delay)
       rescue Docker::Error::NotFoundError
       rescue Docker::Error::ConflictError => e
         @logger.warn "Conflict when removing #{image.id[0...10]}"
@@ -38,6 +40,7 @@ class Images
           @logger.info "Remove #{i.info['RepoTags'][0]} => #{i.id[0...10]}"
           begin
             i.remove
+            sleep(@delay)
           rescue Docker::Error::NotFoundError
           rescue Docker::Error::ConflictError => e
             @logger.warn "Conflict when removing #{i.info['RepoTags'][0]} - ID: #{i.id[0...10]}"
@@ -62,7 +65,7 @@ class Images
         else
           apps[name] << i
         end
-      
+
         if apps[tmax].nil?
           apps[tmax] = i.info["Created"]
         elsif apps[tmax] < i.info["Created"]
@@ -86,6 +89,7 @@ class Images
       @logger.info "Remove unused image #{image.info['RepoTags'][0]} => #{image.id[0...10]}"
       begin
         image.remove
+        sleep(@delay)
       rescue Docker::Error::NotFoundError
       rescue Docker::Error::ConflictError => e
         @logger.warn "Conflict when removing #{image.info['RepoTags'][0]} - ID: #{image.id[0...10]}"

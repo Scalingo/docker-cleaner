@@ -19,3 +19,6 @@ PLATFORMS
 DEPENDENCIES
   docker-api (~> 1.18)
   docker-cleaner!
+
+BUNDLED WITH
+   1.12.5

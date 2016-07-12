@@ -1,7 +1,8 @@
 module DockerCleaner
 class Containers
-  def initialize(logger)
+  def initialize(logger, opts = {})
     @logger = logger
+    @delay = opts.fetch(:delay, 0)
   end
 
   def remove(container)
@@ -20,6 +21,7 @@ class Containers
         (status.include?("Exited (") && container.info["Created"].to_i < two_hours_ago)
     }.each do |container|
       remove(container)
+      sleep(@delay)
     end
 
     containers_per_app = {}
@@ -37,6 +39,7 @@ class Containers
       containers.shift
       containers.each do |container|
         remove(container)
+        sleep(@delay)
       end
     end
   end
