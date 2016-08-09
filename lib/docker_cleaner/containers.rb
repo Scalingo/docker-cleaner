@@ -7,7 +7,7 @@ class Containers
 
   def remove(container)
     @logger.info "Remove #{container.id[0...10]} - #{container.info["Image"]} - #{container.info["Names"][0]}"
-    container.remove
+    container.remove v: true
     @logger.info "Remove #{container.id[0...10]} - #{container.info["Image"]} - #{container.info["Names"][0]}... OK"
   end
 
