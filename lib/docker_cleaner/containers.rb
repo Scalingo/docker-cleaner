@@ -17,7 +17,6 @@ class Containers
     Docker::Container.all(all: true).select{ |container|
       status = container.info["Status"]
       (status == "Created" && container.info["Created"].to_i < two_hours_ago) ||
-        (status.include?("Exited (0)") && container.info["Created"].to_i < two_hours_ago) ||
         (status.include?("Exited (") && container.info["Created"].to_i < two_hours_ago)
     }.each do |container|
       remove(container)
