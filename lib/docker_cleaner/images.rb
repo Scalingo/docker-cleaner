@@ -56,6 +56,8 @@ class Images
     apps = {}
 
     images.each do |i|
+      # RepoTags can be nil sometimes, in this case we ignore the image
+      next if i.info["RepoTags"].nil?
       if i.info["RepoTags"][0] =~ /^#{@registry}\/#{@prefix}/
         name = i.info["RepoTags"][0].split(":")[0]
         tmax = "#{name}-tmax"
