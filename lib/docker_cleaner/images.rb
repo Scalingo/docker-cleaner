@@ -15,7 +15,7 @@ class Images
 
   def clean_unnamed_images
     Docker::Image.all.select do |image|
-      image.info["RepoTags"][0] == "<none>:<none>"
+      image.info["RepoTags"].nil? || image.info["RepoTags"][0] == "<none>:<none>"
     end.each do |image|
       @logger.info "Remove unnamed image #{image.id[0...10]}"
       begin
@@ -82,7 +82,7 @@ class Images
     ten_days_ago = Time.now.to_i - 10 * 24 * 3600
     used_images = Docker::Container.all.map{|c| c.info["Image"]}.select{|i| i =~ /^#{@registry}\/#{@prefix}/ }.uniq
     # Images older than 2 months
-    images = Docker::Image.all.select{|i| i.info["RepoTags"][0] =~ /^#{@registry}\/#{@prefix}/ && i.info["Created"] < ten_days_ago }
+    images = Docker::Image.all.select{|i| i.info["RepoTags"] && i.info["RepoTags"][0] =~ /^#{@registry}\/#{@prefix}/ && i.info["Created"] < ten_days_ago }
     image_repos = images.map{|i| i.info["RepoTags"][0]}
     unused_images = image_repos - used_images
 
