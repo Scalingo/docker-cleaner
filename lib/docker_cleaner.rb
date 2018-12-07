@@ -2,8 +2,8 @@ require 'docker_cleaner/containers'
 require 'docker_cleaner/images'
 
 module DockerCleaner
-  def self.run(registry, prefix, delay, logger)
-    DockerCleaner::Containers.new(logger, delay: delay).run
-    DockerCleaner::Images.new(registry, prefix, logger, delay: delay).run
+  def self.run(registries, prefix, logger, opts)
+    DockerCleaner::Containers.new(logger, opts).run
+    DockerCleaner::Images.new(registries, prefix, logger, opts).run
   end
 end

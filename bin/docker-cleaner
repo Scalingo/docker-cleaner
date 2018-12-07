@@ -17,6 +17,8 @@ options[:prefix] = ENV["PREFIX"]
 options[:log] = ENV["LOG_FILE"]
 options[:docker] = ENV["DOCKER_HOST"]
 options[:delete_delay] = ENV["DELETE_DELAY"]
+options[:registries] = ENV["REGISTRIES"] || [options[:registry]]
+options[:retention] = ENV["RETENTION"]
 
 OptionParser.new do |opts|
   opts.banner = "Usage: docker_clean [options]"
@@ -28,7 +30,10 @@ OptionParser.new do |opts|
     options[:prefix] = r
   end
   opts.on("-rREGISTRY", "--registry=REGISTRY", "Registry") do |r|
-    options[:registry] = r
+    options[:registries] = [r]
+  end
+  opts.on("--registries=REGISTRIES", "Registries") do |r|
+    options[:registries] = r
   end
   opts.on("-lLOG", "--log=LOG", "Log file") do |r|
     options[:log] = r
@@ -36,19 +41,30 @@ OptionParser.new do |opts|
   opts.on("-dDOCKER", "--docker=DOCKER", "Docker endpoint") do |r|
     options[:docker] = r
   end
+  opts.on("--retention=RETENTION", "How long images should be kept before deletion (in hours)") do |r|
+    options[:retention] = r
+  end
 end.parse!
 
 logger = Logger.new options[:log] || $stdout
 
-if options[:registry].nil?
-  $stderr.puts "--registry|-r option should be filled"
+if options[:registries].nil?
+  $stderr.puts "--registries option should be filled"
   exit -1
 end
 
+options[:registries] = options[:registries].split(",").map(&:chomp)
+
+options[:retention]  = options[:retention].to_i
+options[:retention]  = 6 if options[:retention] == 0
 
 Docker.url = options[:docker] || "http://localhost:4243"
 Docker.options = { read_timeout: 300, write_timeout: 300 }
 
 require 'docker_cleaner'
 
-DockerCleaner.run options[:registry], options[:prefix], options[:delete_delay].to_i, logger
+DockerCleaner.run(
+  options[:registries], options[:prefix], logger,
+  delay: options[:delete_delay].to_i,
+  retention: options[:retention],
+)
