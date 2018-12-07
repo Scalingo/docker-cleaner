@@ -17,7 +17,7 @@ options[:prefix] = ENV["PREFIX"]
 options[:log] = ENV["LOG_FILE"]
 options[:docker] = ENV["DOCKER_HOST"]
 options[:delete_delay] = ENV["DELETE_DELAY"]
-options[:registries] = ENV["REGISTRIES"] || [options[:registry]]
+options[:registries] = ENV["REGISTRIES"] || options[:registry]
 options[:retention] = ENV["RETENTION"]
 
 OptionParser.new do |opts|
@@ -30,7 +30,7 @@ OptionParser.new do |opts|
     options[:prefix] = r
   end
   opts.on("-rREGISTRY", "--registry=REGISTRY", "Registry") do |r|
-    options[:registries] = [r]
+    options[:registries] = r
   end
   opts.on("--registries=REGISTRIES", "Registries") do |r|
     options[:registries] = r
