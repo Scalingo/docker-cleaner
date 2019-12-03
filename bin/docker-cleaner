@@ -11,6 +11,8 @@ require 'docker'
 require 'optparse'
 require 'logger'
 
+STOP_DOCKER_CLEANER_FILE = '/tmp/stop-docker-cleaner'.freeze
+
 options = {}
 options[:registry] = ENV["REGISTRY"]
 options[:prefix] = ENV["PREFIX"]
@@ -44,6 +46,10 @@ OptionParser.new do |opts|
   opts.on("--retention=RETENTION", "How long images should be kept before deletion (in hours)") do |r|
     options[:retention] = r
   end
+
+  opts.on("--force", "Force the clean even if the #{STOP_DOCKER_CLEANER_FILE} file is present") do |r|
+    options[:force] = true
+  end
 end.parse!
 
 logger = Logger.new options[:log] || $stdout
@@ -60,6 +66,17 @@ options[:retention]  = 6 if options[:retention] == 0
 
 Docker.url = options[:docker] || "http://localhost:4243"
 Docker.options = { read_timeout: 300, write_timeout: 300 }
+
+if File.file? STOP_DOCKER_CLEANER_FILE
+  logger.info 'Stop docker cleaner file is present'
+
+  if !options[:force]
+    logger.info 'Aborting'
+    exit 0
+  else
+    logger.info 'Force flag is present, continuing...'
+  end
+end
 
 require 'docker_cleaner'
 
