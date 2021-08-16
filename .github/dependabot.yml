@@ -1,0 +1,11 @@
+version: 2
+updates:
+  - package-ecosystem: "bundler"
+    directory: "/"
+    allow:
+      - dependency-type: "all"
+    versioning-strategy: lockfile-only
+    schedule:
+      interval: "monthly"
+    reviewers:
+      - "Soulou"
