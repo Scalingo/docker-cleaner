@@ -1,2 +1,6 @@
 /.bundle
 /binstubs
+
+# IDE
+.idea/
+.vscode/
