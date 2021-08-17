@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    docker-cleaner (0.3.0)
+    docker-cleaner (0.4.0)
       docker-api (~> 1.0)
 
 GEM
@@ -21,4 +21,4 @@ DEPENDENCIES
   docker-cleaner!
 
 BUNDLED WITH
-   1.17.2
+   2.1.4
