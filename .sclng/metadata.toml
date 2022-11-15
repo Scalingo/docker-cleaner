@@ -1,0 +1,7 @@
+dependencies = []
+description = "Small ruby script to remove old containers and old images"
+flags = ["deployed-by-chef"]
+languages = ["ruby"]
+owner = "leo@scalingo.com"
+team = "IST"
+version = "1.1.0"
