@@ -15,10 +15,10 @@ Bump new version number in:
 Commit, tag and create a new release:
 ```shell
 git add README.md lib/docker_cleaner/version.rb
-git commit -m "release: Bump v0.6.0"
-git tag v0.6.0
-git push origin master v0.6.0
-gh release create v0.6.0
+git commit -m "release: Bump v0.5.0"
+git tag v0.5.0
+git push origin master v0.5.0
+gh release create v0.5.0
 ```
 
 The title of the release should be the version number.
