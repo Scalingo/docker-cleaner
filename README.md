@@ -14,11 +14,21 @@ Bump new version number in:
 
 Commit, tag and create a new release:
 ```shell
-git add README.md lib/docker_cleaner/version.rb
-git commit -m "release: Bump v0.5.0"
-git tag v0.5.0
-git push origin master v0.5.0
-gh release create v0.5.0
+version="0.5.0"
+
+git switch --create release/${version}
+git add Gemfile.lock README.md lib/docker_cleaner/version.rb
+git commit -m "release: Bump v${version}"
+git push --set-upstream origin release/${version}
+gh pr create --reviewer=EtienneM --title "$(git log -1 --pretty=%B)"
+```
+
+Once the pull request merged, you can tag the new release.
+
+```shell
+git tag v${version}
+git push origin master v${version}
+gh release create v${version}
 ```
 
 The title of the release should be the version number.
