@@ -18,7 +18,7 @@ git add README.md lib/docker_cleaner/version.rb
 git commit -m "release: Bump v0.6.0"
 git tag v0.6.0
 git push origin master v0.6.0
-hub release create v0.6.0
+gh release create v0.6.0
 ```
 
 The title of the release should be the version number.
