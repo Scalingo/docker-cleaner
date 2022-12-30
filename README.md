@@ -14,7 +14,7 @@ Bump new version number in:
 
 Commit, tag and create a new release:
 ```shell
-version="0.5.0"
+version="0.6.0"
 
 git switch --create release/${version}
 git add Gemfile.lock README.md lib/docker_cleaner/version.rb
