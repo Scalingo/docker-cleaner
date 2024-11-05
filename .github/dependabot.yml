@@ -8,10 +8,10 @@ updates:
     schedule:
       interval: "monthly"
     reviewers:
-      - "Soulou"
+      - "leo-scalingo"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "monthly"
     reviewers:
-      - "Soulou"
+      - "leo-scalingo"
