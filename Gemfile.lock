@@ -1,26 +1,27 @@
 PATH
   remote: .
   specs:
-    docker-cleaner (0.6.0)
-      docker-api (~> 1.0)
+    docker-cleaner (0.7.0)
+      docker-api (~> 2.0)
 
 GEM
   remote: https://rubygems.org/
   specs:
-    docker-api (1.34.2)
-      excon (>= 0.47.0)
+    docker-api (2.4.0)
+      excon (>= 0.64.0)
       multi_json
-    excon (1.2.5)
+    excon (1.3.0)
       logger
-    logger (1.6.6)
+    logger (1.7.0)
     multi_json (1.15.0)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  docker-api (~> 1.18)
+  docker-api
   docker-cleaner!
+  multi_json (= 1.15)
 
 BUNDLED WITH
-   2.1.4
+   2.2.17
