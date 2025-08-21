@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.description = "Small utility to clean old docker data, containers according to some settings"
   s.license     = "MIT"
 
-  s.add_dependency "docker-api", "~> 1.0"
+  s.add_dependency "docker-api", "~> 2.0"
 
   s.files        = `git ls-files`.split("\n")
   s.executables  = `git ls-files -- bin/*`.split("\n").map { |f| File.basename(f) }
