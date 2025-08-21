@@ -10,7 +10,7 @@ GEM
     docker-api (2.4.0)
       excon (>= 0.64.0)
       multi_json
-    excon (1.3.0)
+    excon (1.2.5)
       logger
     logger (1.7.0)
     multi_json (1.15.0)
@@ -21,6 +21,7 @@ PLATFORMS
 DEPENDENCIES
   docker-api
   docker-cleaner!
+  excon (= 1.2.5)
   multi_json (= 1.15)
 
 BUNDLED WITH
