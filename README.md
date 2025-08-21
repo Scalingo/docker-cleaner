@@ -1,4 +1,4 @@
-# Docker Cleaner v0.6.0
+# Docker Cleaner v0.7.0
 
 Small ruby script to remove old containers and old images.
 
