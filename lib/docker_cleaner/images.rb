@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DockerCleaner
   class Images
     def initialize(registries, prefix, logger, opts = {})
@@ -33,20 +35,19 @@ module DockerCleaner
     def clean_old_images
       apps = images_with_latest
       apps.each do |app, images|
-        if app =~ /.*-tmax$/
-          next
-        end
+        next if /.*-tmax$/.match?(app)
+
         images.each do |i|
-          unless i.info["Created"] == apps["#{app}-tmax"]
-            @logger.info "Remove #{i.info['RepoTags'][0]} => #{i.id[0...10]}"
-            begin
-              i.remove
-              sleep(@delay)
-            rescue Docker::Error::NotFoundError
-            rescue Docker::Error::ConflictError => e
-              @logger.warn "Conflict when removing #{i.info['RepoTags'][0]} - ID: #{i.id[0...10]}"
-              @logger.warn " !     #{e.message}"
-            end
+          next if i.info["Created"] == apps["#{app}-tmax"]
+
+          @logger.info "Remove #{i.info["RepoTags"][0]} => #{i.id[0...10]}"
+          begin
+            i.remove
+            sleep(@delay)
+          rescue Docker::Error::NotFoundError
+          rescue Docker::Error::ConflictError => e
+            @logger.warn "Conflict when removing #{i.info["RepoTags"][0]} - ID: #{i.id[0...10]}"
+            @logger.warn " !     #{e.message}"
           end
         end
       end
@@ -59,42 +60,43 @@ module DockerCleaner
       images.each do |i|
         # RepoTags can be nil sometimes, in this case we ignore the image
         next if i.info["RepoTags"].nil?
-        if registries_include?(i.info["RepoTags"][0])
-          name = i.info["RepoTags"][0].split(":")[0]
-          tmax = "#{name}-tmax"
 
-          if apps[name].nil?
-            apps[name] = [i]
-          else
-            apps[name] << i
-          end
+        next unless registries_include?(i.info["RepoTags"][0])
 
-          if apps[tmax].nil?
-            apps[tmax] = i.info["Created"]
-          elsif apps[tmax] < i.info["Created"]
-            apps[tmax] = i.info["Created"]
-          end
+        name = i.info["RepoTags"][0].split(":")[0]
+        tmax = "#{name}-tmax"
+
+        if apps[name].nil?
+          apps[name] = [i]
+        else
+          apps[name] << i
+        end
+
+        if apps[tmax].nil?
+          apps[tmax] = i.info["Created"]
+        elsif apps[tmax] < i.info["Created"]
+          apps[tmax] = i.info["Created"]
         end
       end
       apps
     end
 
     def clean_unused_images
-      used_images = Docker::Container.all.map{|c| c.info["Image"]}.select{|i| registries_include?(i) }.uniq
+      used_images = Docker::Container.all.map { |c| c.info["Image"] }.select { |i| registries_include?(i) }.uniq
       # Images older than 2 months
-      images = Docker::Image.all.select{|i| i.info["RepoTags"] && registries_include?(i.info["RepoTags"][0]) && i.info["Created"] < @retention }
-      image_repos = images.map{|i| i.info["RepoTags"][0]}
+      images = Docker::Image.all.select { |i| i.info["RepoTags"] && registries_include?(i.info["RepoTags"][0]) && i.info["Created"] < @retention }
+      image_repos = images.map { |i| i.info["RepoTags"][0] }
       unused_images = image_repos - used_images
 
       unused_images.each do |i|
-        image = images.select{|docker_image| docker_image.info["RepoTags"][0] == i}[0]
-        @logger.info "Remove unused image #{image.info['RepoTags'][0]} => #{image.id[0...10]}"
+        image = images.find { |docker_image| docker_image.info["RepoTags"][0] == i }
+        @logger.info "Remove unused image #{image.info["RepoTags"][0]} => #{image.id[0...10]}"
         begin
           image.remove
           sleep(@delay)
         rescue Docker::Error::NotFoundError
         rescue Docker::Error::ConflictError => e
-          @logger.warn "Conflict when removing #{image.info['RepoTags'][0]} - ID: #{image.id[0...10]}"
+          @logger.warn "Conflict when removing #{image.info["RepoTags"][0]} - ID: #{image.id[0...10]}"
           @logger.warn " !     #{e.message}"
         end
       end
@@ -103,15 +105,12 @@ module DockerCleaner
     protected
 
     def registries_include?(image)
-      if image.nil? || image == ''
-        return false
-      end
+      return false if image.nil? || image == ""
+
       @registries.each do |registry|
-        if image =~ /^#{registry}\/#{@prefix}/
-          return true
-        end
+        return true if %r{^#{registry}/#{@prefix}}.match?(image)
       end
-      return false
+      false
     end
   end
 end

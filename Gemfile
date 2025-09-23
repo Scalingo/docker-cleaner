@@ -1,9 +1,13 @@
-source 'https://rubygems.org'
+# frozen_string_literal: true
 
-gem 'docker-api'
+source "https://rubygems.org"
 
-# For compat with ruby 2.7
-gem 'excon', '1.2.5'
-gem 'multi_json', '1.15'
+gem "docker-api"
+# Require to remove transition warning of base64 moving out of stdlib in ruby 3.4
+gem "base64"
 
-gem 'docker-cleaner', path: "."
+group :development, :test do
+  gem "rubocop", require: false
+  gem "rubocop-performance"
+  gem "standard"
+end

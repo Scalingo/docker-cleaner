@@ -1,5 +1,7 @@
-require 'docker_cleaner/containers'
-require 'docker_cleaner/images'
+# frozen_string_literal: true
+
+require "docker_cleaner/containers"
+require "docker_cleaner/images"
 
 module DockerCleaner
   def self.run(registries, prefix, logger, opts)

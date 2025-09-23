@@ -1,0 +1,38 @@
+require:
+  - standard
+  - standard-custom
+  - standard-performance
+  - rubocop-performance
+
+inherit_gem:
+  standard: config/base.yml
+  standard-custom: config/base.yml
+  standard-performance: config/base.yml
+
+AllCops:
+  TargetRubyVersion: 3.3
+  SuggestExtensions: false
+  NewCops: enable
+  Exclude:
+    - 'tmp/**/*'
+    - 'vendor/**/*'
+    - 'node_modules/**/*'
+    - 'bin/{bundle,rails,rake}'
+    - 'db/schema.rb'
+    - 'spec/spec_helper.rb'
+
+# Leave trailing commas.
+# The case where they're not appropriate are too few to justify switching
+# (at least, for now).
+# https://github.com/penelopezone/rubyfmt/issues/154
+Style/TrailingCommaInArguments:
+  Enabled: true
+  EnforcedStyleForMultiline: consistent_comma
+
+Style/TrailingCommaInArrayLiteral:
+  Enabled: true
+  EnforcedStyleForMultiline: consistent_comma
+
+Style/TrailingCommaInHashLiteral:
+  Enabled: true
+  EnforcedStyleForMultiline: consistent_comma
