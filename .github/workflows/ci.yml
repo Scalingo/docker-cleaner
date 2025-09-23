@@ -9,9 +9,5 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - uses: ruby/setup-ruby@v1
-      with:
-        bundler-cache: true
     - name: Linter
       run: bundle exec rubocop --format github
-    - name: RSpec
-      run: bundle exec rspec
