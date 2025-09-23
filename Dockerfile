@@ -6,4 +6,4 @@ WORKDIR /usr/src/app
 
 RUN bundle install --without development test
 
-ENTRYPOINT ["bundle", "exec", "ruby", "bin/docker-cleaner"]
+ENTRYPOINT ["bash", "bin/docker-entrypoint.sh"]
