@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DockerCleaner
   class Containers
     def initialize(logger, opts = {})
@@ -14,27 +16,27 @@ module DockerCleaner
     def run
       # Remove stopped container which stopped with code '0'
       two_hours_ago = Time.now.to_i - 2 * 3600
-      Docker::Container.all(all: true).select{ |container|
+      Docker::Container.all(all: true).select do |container|
         status = container.info["Status"]
         (status == "Created" && container.info["Created"].to_i < two_hours_ago) ||
           (status.include?("Exited (") && container.info["Created"].to_i < two_hours_ago)
-      }.each do |container|
+      end.each do |container|
         remove(container)
         sleep(@delay)
       end
 
       containers_per_app = {}
-      Docker::Container.all(all: true).select{ |container|
+      Docker::Container.all(all: true).select do |container|
         container.info["Status"].include?("Exited")
-      }.each{ |container|
+      end.each do |container|
         app = container.info["Image"].split(":", 2)[0]
         if containers_per_app[app].nil?
           containers_per_app[app] = [container]
         else
           containers_per_app[app] << container
         end
-      }
-      containers_per_app.each do |app, containers|
+      end
+      containers_per_app.each_value do |containers|
         containers.shift
         containers.each do |container|
           remove(container)

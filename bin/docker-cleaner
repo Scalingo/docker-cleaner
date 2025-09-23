@@ -1,17 +1,18 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
-path = File.expand_path(File.join(File.dirname(__FILE__), 'lib'))
+path = File.expand_path(File.join(File.dirname(__FILE__), "lib"))
 $LOAD_PATH << path
 
-require 'rubygems'
-require 'bundler/setup'
+require "rubygems"
+require "bundler/setup"
 Bundler.require :default
-require 'docker'
+require "docker"
 
-require 'optparse'
-require 'logger'
+require "optparse"
+require "logger"
 
-STOP_DOCKER_CLEANER_FILE = '/tmp/stop-docker-cleaner'.freeze
+STOP_DOCKER_CLEANER_FILE = "/tmp/stop-docker-cleaner"
 
 options = {}
 options[:registry] = ENV["REGISTRY"]
@@ -47,7 +48,7 @@ OptionParser.new do |opts|
     options[:retention] = r
   end
 
-  opts.on("--force", "Force the clean even if the #{STOP_DOCKER_CLEANER_FILE} file is present") do |r|
+  opts.on("--force", "Force the clean even if the #{STOP_DOCKER_CLEANER_FILE} file is present") do |_r|
     options[:force] = true
   end
 end.parse!
@@ -55,30 +56,30 @@ end.parse!
 logger = Logger.new options[:log] || $stdout
 
 if options[:registries].nil?
-  $stderr.puts "--registries option should be filled"
-  exit -1
+  warn "--registries option should be filled"
+  exit(-1)
 end
 
 options[:registries] = options[:registries].split(",").map(&:chomp)
 
-options[:retention]  = options[:retention].to_i
-options[:retention]  = 6 if options[:retention] == 0
+options[:retention] = options[:retention].to_i
+options[:retention] = 6 if options[:retention].zero?
 
 Docker.url = options[:docker] || "http://localhost:4243"
-Docker.options = { read_timeout: 300, write_timeout: 300 }
+Docker.options = {read_timeout: 300, write_timeout: 300}
 
 if File.file? STOP_DOCKER_CLEANER_FILE
-  logger.info 'Stop docker cleaner file is present'
+  logger.info "Stop docker cleaner file is present"
 
   if !options[:force]
-    logger.info 'Aborting'
+    logger.info "Aborting"
     exit 0
   else
-    logger.info 'Force flag is present, continuing...'
+    logger.info "Force flag is present, continuing..."
   end
 end
 
-require 'docker_cleaner'
+require "docker_cleaner"
 
 DockerCleaner.run(
   options[:registries], options[:prefix], logger,
