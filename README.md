@@ -1,4 +1,4 @@
-# Docker Cleaner v0.7.1
+# Docker Cleaner v0.7.2
 
 Small ruby script to remove old containers and old images.
 
@@ -9,12 +9,12 @@ For images, this removes unused and untagged images.
 
 Bump new version number in:
 - README.md
+- CHANGELOG.md
 - lib/docker_cleaner/version.rb
-- Gemfile.lock (docker-cleaner specs entry)
 
 Commit, tag and create a new release:
 ```shell
-version="0.6.0"
+version="0.7.2"
 
 git switch --create release/${version}
 git add Gemfile.lock README.md lib/docker_cleaner/version.rb
