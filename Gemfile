@@ -5,3 +5,9 @@ gem 'docker-api'
 gem 'base64'
 
 gem 'docker-cleaner', path: "."
+
+group :development, :test do
+  gem "rubocop", require: false
+  gem "rubocop-performance"
+  gem "standard"
+end
