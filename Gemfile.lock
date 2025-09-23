@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    docker-cleaner (0.7.0)
+    docker-cleaner (0.7.1)
       docker-api (~> 2.0)
 
 GEM
@@ -25,4 +25,4 @@ DEPENDENCIES
   multi_json (= 1.15)
 
 BUNDLED WITH
-   2.2.17
+   2.7.2
