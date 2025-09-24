@@ -79,7 +79,7 @@ if File.file? STOP_DOCKER_CLEANER_FILE
   end
 end
 
-require "docker_cleaner"
+require_relative "../lib/docker_cleaner"
 
 DockerCleaner.run(
   options[:registries], options[:prefix], logger,
