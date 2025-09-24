@@ -43,3 +43,5 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: scalingo/sc-docker-cleaner:${{ steps.vars.outputs.tag }}
+          # For compat with old docker versions
+          outputs: type=docker,oci-mediatypes=false
