@@ -31,3 +31,5 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: scalingo/sc-docker-cleaner:${{ github.ref_name }}
+          # For compat with old docker versions
+          outputs: type=docker,oci-mediatypes=false
