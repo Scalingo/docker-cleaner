@@ -1,16 +1,27 @@
-# This defines the name of the workflow as it will appear in the "Actions" tab of the GitHub repository.
-name: 'CI'
+name: CI
 
-on: [push]
+on:
+  pull_request:
+  workflow_dispatch:
+  push:
+    branches: [main, master, prod]
+
+# Concurrency settings to avoid running multiple workflows for the same pull request or branch at the same time.
+# `concurrency.group` generates a concurrency group name from the workflow name and pull request information. The `||` operator is used to define fallback values.
+# `concurrency.cancel-in-progress` cancels any currently running job or workflow in the same concurrency group.
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.head_ref || github.ref }}'
+  cancel-in-progress: true
+
+# The list of permissions is explained on the GitHub doc:
+# https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs
+permissions:
+  contents: read
+
 
 jobs:
   checks:
+    name: Ruby Checks
     runs-on: ubuntu-24.04
     steps:
-    - uses: actions/checkout@v5
-    - uses: ruby/setup-ruby@v1
-      with:
-        bundler-cache: true
-
-    - name: Linter
-      run: bundle exec rubocop --format github
+      - uses: Scalingo/actions/ruby-checks@main
