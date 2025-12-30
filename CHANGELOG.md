@@ -1,3 +1,11 @@
+# Changelog
+
+## To Be Released
+
+## v1.0.0
+
+* chore(deps): various updates
+
 ## v0.7.3
 
 * Fix executable
