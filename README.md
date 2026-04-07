@@ -1,4 +1,4 @@
-# Docker Cleaner v1.0.0
+# Docker Cleaner v1.0.1
 
 Small ruby script to remove old containers and old images.
 
@@ -14,11 +14,11 @@ Bump new version number in:
 
 Commit, tag and create a new release:
 ```shell
-version="1.0.0"
+version="1.0.1"
 
 git switch --create release/${version}
 git add CHANGELOG.md README.md lib/docker_cleaner/version.rb
-git commit -m "release: Bump v${version}"
+git commit --message="release: Bump v${version}"
 git push --set-upstream origin release/${version}
 gh pr create --reviewer=Scalingo/team-ist --title "$(git log -1 --pretty=%B)"
 ```
