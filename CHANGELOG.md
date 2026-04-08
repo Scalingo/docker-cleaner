@@ -2,6 +2,10 @@
 
 ## To Be Released
 
+## v1.0.1
+
+* chore(deps): various updates
+
 ## v1.0.0
 
 * chore(deps): various updates
