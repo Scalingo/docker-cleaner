@@ -2,11 +2,99 @@ version: 2
 updates:
   - package-ecosystem: "bundler"
     directory: "/"
-    allow:
-      - dependency-type: "all"
-    versioning-strategy: lockfile-only
+    insecure-external-code-execution: allow
+    versioning-strategy: auto
+    ignore:
+      - dependency-name: "mongo"
+        versions: [">=2.24.0"]
+      - dependency-name: "mongoid"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "rails"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "activerecord"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "actionpack"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "actioncable"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "actionmailer"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "actionmailbox"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "activejob"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "activemodel"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "actiontext"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "actionview"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "activestorage"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "activesupport"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "railties"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "sprockets"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "sass-rails"
+        update-types: ["version-update:semver-major"]
+    open-pull-requests-limit: 10
+    groups:
+      rails-dependencies:
+        patterns:
+          - "rails"
+          - "activerecord"
+          - "actionpack"
+          - "actioncable"
+          - "actionmailer"
+          - "actionmailbox"
+          - "activejob"
+          - "activemodel"
+          - "actiontext"
+          - "actionview"
+          - "activestorage"
+          - "activesupport"
+          - "railties"
+          - "sprockets"
+          - "sass-rails"
+        update-types:
+          - minor
+          - patch
+      production-minor:
+        dependency-type: production
+        exclude-patterns:
+          - "rails*"
+          - "action*"
+          - "active*"
+          - "railties"
+          - "sprockets"
+          - "sass-rails"
+        update-types:
+          - minor
+      production-patch:
+        dependency-type: production
+        exclude-patterns:
+          - "rails*"
+          - "action*"
+          - "active*"
+          - "railties"
+          - "sprockets"
+          - "sass-rails"
+        update-types:
+          - patch
+      development:
+        dependency-type: development
+        update-types:
+          - minor
+          - patch
+    labels:
+      - "T: Deps"
     schedule:
       interval: "monthly"
+      time: "06:00"
+      timezone: "Europe/Paris"
+
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
