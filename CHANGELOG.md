@@ -2,6 +2,10 @@
 
 ## To Be Released
 
+## v1.0.3
+
+* chore(deps): various updates
+
 ## v1.0.2
 
 * Disable Docker build provenance and use registry output for compatibility with old Docker versions (needed to work properly on Ubuntu 16).
