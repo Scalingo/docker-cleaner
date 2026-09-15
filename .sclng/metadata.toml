@@ -1,7 +1,8 @@
 dependencies = []
 description = "Small ruby script to remove old containers and old images"
 flags = ["deployed-by-chef"]
-languages = ["ruby"]
-owner = "leo@scalingo.com"
+languages = ["ruby", "github-actions"]
+owner = "team-infrastructure-services@scalingo.com"
 team = "IST"
+tier = 1
 version = "1.1.0"
